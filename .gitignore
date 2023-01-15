@@ -1,0 +1,11 @@
+.config.json
+pass
+*.txt
+!requirements.txt
+cache.txt
+__pycache__
+*.swp
+backup/*.key
+backup/*.gpg
+backup/*.txt
+backup/*.json

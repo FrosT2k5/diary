@@ -5,7 +5,7 @@ Made with Python & Bash, specially for linux users <br>
 # Supported Platforms
 - Linux
 - Termux
-- WSL (Untested)
+- WSL
 
 # Features
 - Year wise encrypted diary files, encrypted with [gnupg](https://gnupg.org/) public key encryption
@@ -29,4 +29,4 @@ If you found any issue while using this diary, make a new issue providing good d
 Alternatively, contact me on [Telegram](https://t.me/SuperCosmicBeing)
 
 # Credits
-Special thanks to [@Jayb71](https://github.com/jayb71) for testing and feedback
+Special thanks to [@Jayb71](https://github.com/jayb71) and [@Wahid7852](https://github.com/Wahid7852/) for testing and feedback

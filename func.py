@@ -28,7 +28,7 @@ def git_push(gitpassword):
     cdate = x.strftime("%m/%d/%Y")
     run("git add .",shell=True)
     run(f"git commit -m 'Update on {cdate}'",shell=True)
-    push = pexpect.spawn('git push diary master')
+    push = pexpect.spawn('git push -u diary master')
     push.expect("Username for 'https://gitlab.com': ")
     push.sendline(gitusername)
     push.expect("Password") 

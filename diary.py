@@ -31,7 +31,7 @@ if __name__ == "__main__":
     gitpullcheck = input("Run a git pull? (RECOMMENDED) (y/N): ")
     if gitpullcheck == "N" or gitpullcheck == "n":
         print("Not running git pull can cause conflicts when using diary across multiple devices, use this option cautiously")
-        sleep(5)
+        sleep(2)
     else:
         git_pull(gitpassword)
 
@@ -71,6 +71,6 @@ if __name__ == "__main__":
     if gitpullcheck == "N" or gitpullcheck == "n":
         print("Not running git push can cause conflicts when using diary across multiple devices, use this option cautiously \n make sure you dont write anything in diary in different device until you push from this device.")
         print("Push later using func.py")
-        sleep(5)
+        sleep(2)
     else:
         git_push(gitpassword)

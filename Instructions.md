@@ -53,11 +53,8 @@ pip3 install -r requirements.txt
 python3 setup.py
 ```
 **Note:**
-1. When asked to enter git remote, enter ```https://gitlab.com/yourusername/mydiary``` <br>
-Replace yourusername with your username, if you enter this correctly gitlab should automatically make a private repo for you on completing setup
-2. Be extremely careful when choosing and generating gnupg keys, once you select a key you can't easily switch it later
-3. Don't forget your gpg key's password/passphrase, there is no way to recover it if lost. Write it down somewhere safe
-4. Read the starting information after running setup.py carefully.
+1. Be extremely careful when choosing and generating gnupg keys, once you select a key you can't easily switch it later
+2. Don't forget your gpg key's password/passphrase, there is no way to recover it if lost. Write it down somewhere safe
 
 ** **
 6. Setup Complete

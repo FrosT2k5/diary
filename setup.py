@@ -6,19 +6,24 @@ import json
 import re
 import datetime
 import pexpect
+from diarykeygen import genkey
+
 
 # Setting up diary (.config.json) and editing config.json via this script
 # Also manage gitlab password with this script
+
 
 def dumpconfig(configdict):
     #This function is used to dump provided configdict to .config.json
     with open(".config.json","w+") as jsonfile:
         json.dump(configdict,jsonfile,indent=4)
 
+
 def getconfig():
     #This function returns json from .config.json as dictionary
     with open(".config.json") as jsonfile:
         return json.load(jsonfile)
+
 
 def pushfirsttime(gitusername,gitpassword,gitremote):
     #This function is needed to set git remote, so just running git push from next time would push to master branch of remote specified by the user
@@ -35,12 +40,14 @@ def pushfirsttime(gitusername,gitpassword,gitremote):
     push.interact()
     run("rm -f $HOME/.cache/git/credential/socket",shell=True)
 
+
 def gengitpassword(name,gitpassword):
     print("\nYour password is stored securely in pass.gpg just like the diary. You will be asked to overwrite that file if you are reentering password")
     run(f"echo {gitpassword} > pass",shell=True)
     passwordcmd = f"gpg -e -r \"{name}\" -o pass.gpg pass"
     run(passwordcmd,shell=True,capture_output=True,check=True)
     run("rm -f pass",shell=True)
+
 
 # write this text to README_CAREFULLY.txt in backup folder
 backuprestorenote = "This folder (backup/) contains backup of your diary keys and configuration. \
@@ -50,6 +57,7 @@ backuprestorenote = "This folder (backup/) contains backup of your diary keys an
     \n List of files: public.key, private.key, ownertrust.gpg.txt, config.json \n \
     \n To restore diary in another device, check out instructions at : \
     \nhttps://github.com/FrosT2k5/diary/blob/master/Instructions.md#backing-up-and-restoring-diary-and-using-across-multiple-devices\n"
+
 
 def backupdiary():
     print("\n\n",backuprestorenote)
@@ -64,6 +72,7 @@ def backupdiary():
     with open("backup/README_CAREFULLY.txt","w+") as readmefile:
         readmefile.write(backuprestorenote)
     print("Backed up public.key,private.key,config.json & ownertrust.gpg.txt to backup/ folder")
+
 
 def restorediary():
     if isfile("pass.gpg"):
@@ -89,31 +98,49 @@ def restorediary():
     gitpassword = run("gpg -d pass.gpg",shell=True,capture_output=True,check=True,text=True).stdout
     pushfirsttime(configdict['gitusername'],gitpassword,configdict['gitremote'])
 
-def genjson(keycheck=None):
-    if keycheck != "s":
-        print("READ CAREFULLY: \
-        \nSelect 1 - RSA and RSA key for diary \
-        \nSelect 4096 bits long for keysize \
-        \nMake sure you select 0 later to make sure your key doesn't expire and your diary remains accessible forever \
-        \nTake note of name and email you enter while generating key, since it will be needed later")
 
-        keycheck = input("\nPress enter only if you read above! (Enter s to skip key generation if you already generated key): ")
-        sleep(0.5)
+# This function is used to generate json and keys when user runs this script for first time
+def genjson(keycheck=None):
+    print("Please enter correct information.")
+    # Function to take and validate input from user 
+    def parseinput(inputtype,regexp,inputinfo):
+        while True:
+            inputdata = input(f"Enter {inputtype}: ")
+            pattern = re.compile(regexp)
+            valid = re.search(pattern,inputdata)
+            if valid:
+                return inputdata
+            else:
+                print("Enter valid input,",inputinfo)
+
+    name = parseinput("Full Name",r"^[A-Za-z]{3,}\ [A-Za-z]{3,}$","Format: first_name last_name,atleast 3 chars long")
+    print("Name: ",name)
+    
+    email = parseinput("Email: ",r"^[A-Za-z0-9+_.-]+@.+\..+$","Format: abc@example.com")
+    print("Email: ",email)
+
+    passphrase=parseinput("Password","^[A-Za-z1-9@$!%*#?&]{8,}$","Atleast 8 characters long. Only english letters, numbers and special characters.")
+    print("Password: ",passphrase)
+    print("Store your password somewhere safe, you can't change it later.")
+    sleep(0.5)
+
+    gitusername = input("Enter gitlab username: ")
+    gitpassword = input("Enter gitlab password: ")
+    gitremote = "https://gitlab.com/"+gitusername+"/mydiary.git"
+    print("Automatically generated gitlab url: ",gitremote)
+    grcheck = input("Proceed with above url? (y/n): ")
+    if grcheck.lower() == "n":
+        gitremote = input("Enter git remote url: ")
 
     # Allow user to skip generating key if they have one already 
     if keycheck != "s":
-        genkey = run("gpg --full-generate-key",shell=True,check=True,text=True)
+        genkey(name,email,passphrase)
     
-    # List all private keys in system so that user can use it for reference
-    keylist = run("gpg --list-secret-keys | grep uid",shell=True,check=True,capture_output=True,text=True).stdout
+    # List the user generated key for diary here, so that user can check it for reference
+    keylist = run(f"gpg --list-secret-keys | grep -B3 -A2 uid | grep -B3 -A2 {email}",shell=True,check=True,capture_output=True,text=True).stdout
 
-    print("\n\nHere is the list of all existing keys in your system. Enter name and email appropriately\n",keylist)   
-
-    name = input("Enter the name that you entered while generating key: ")
-    email = input("Enter email that you entered while generating key: ")
-    gitusername = input("Enter gitlab username: ")
-    gitpassword = input("Enter gitlab password: ")
-    gitremote = input("Enter git remote url: ")
+    print("\n\nHere is the generated key, make sure it's info is correct.\n",keylist)   
+    
     year = datetime.datetime.now().strftime("%Y")
 
     configdict = {
@@ -135,6 +162,8 @@ def genjson(keycheck=None):
     gitpassword = run("gpg -d pass.gpg",shell=True,capture_output=True,check=True,text=True).stdout
     pushfirsttime(configdict['gitusername'],gitpassword,configdict['gitremote'])
 
+
+# This function is main menu
 def menu():
     # clean git cache on startup
     run("rm -f $HOME/.cache/git/credential/socket",shell=True)
@@ -199,8 +228,12 @@ if __name__ == "__main__":
     if not isfile(".config.json"):
         if not isfile("pass.gpg"):
             print("Looks like you are running me for the first time, Welcome :)\n")
+            check = input("Press enter to continue: ")
             sleep(0.3)
-            genjson() #Generate json
+            if check.lower == "y":
+                genjson(keycheck="s") #For advanced users, generate json without generating key.
+            else:
+                genjson() #Generate json
         else:
             restorecheck = input("Looks like you need to restore diary, proceed with restoring? (y/n): ")
             if restorecheck.lower() == "y":

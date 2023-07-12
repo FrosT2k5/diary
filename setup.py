@@ -6,7 +6,7 @@ import json
 import re
 import datetime
 import pexpect
-from diarykeygen import genkey
+from keygendiary import genkey
 
 
 # Setting up diary (.config.json) and editing config.json via this script

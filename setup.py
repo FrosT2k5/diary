@@ -78,7 +78,7 @@ def restorediary():
     if isfile("pass.gpg"):
         print("Found pass.gpg, you probably cloned correct repo!")
     else:
-        print("pass.gpg missing, looks like you cloned template repository, please clone the one hosted on your personal gitlab account. \n Check below link for more info: \n")
+        print("pass.gpg missing, looks like you cloned template repository, please clone the one hosted on your personal gitlab account. \nCheck the link below for more info: \nhttps://github.com/FrosT2k5/diary/blob/master/Instructions.md")
         return 0
     # If above check is passed then user has cloned correct repo, proceed to look if backup files exist
 

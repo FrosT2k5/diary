@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     #Time to push to git
     gitpushcheck = input("Do you want to push to git? (RECOMMENDED) (Y/n): ")
-    if gitpullcheck == "N" or gitpullcheck == "n":
+    if gitpushcheck == "N" or gitpushcheck == "n":
         print("Not running git push can cause conflicts when using diary across multiple devices, use this option cautiously \n make sure you dont write anything in diary in different device until you push from this device.")
         print("Push later using func.py")
         sleep(2)

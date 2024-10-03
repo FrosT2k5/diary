@@ -82,7 +82,7 @@ Check setup.py for additional functionalities(related to configuration)
             exit()
         elif inp == '5':
             yeartoencrypt = input("Enter year number to encrypt its file: ")
-            decryptedfile = yeartodecrypt + ".txt"
+            decryptedfile = yeartoencrypt + ".txt"
             cmdtorun = f"gpg -e -r {configdict['name']} {decryptedfile}"
             print(cmdtorun)
             run(cmdtorun,shell=True)

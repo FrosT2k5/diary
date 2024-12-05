@@ -41,8 +41,8 @@ if __name__ == "__main__":
 1. decrypt the current year diary
 2. encrypt the current year diary (year.txt)
 3. cancel all local changes (git checkout .) (run 'git status' in terminal to see local changes)
-4. Decrypt previous year diary (year.txt.gpg)
-5. Encrypt previouss year diary (year.txt)
+4. Decrypt previous year diary (year[.txt].gpg)
+5. Encrypt previous year diary (year[.txt])
 6. Git pull
 7. Git push
 8. exit
@@ -75,14 +75,14 @@ Check setup.py for additional functionalities(related to configuration)
             exit()
         elif inp == "4":
             yeartodecrypt = input("Enter year number to decrypt its file: ")
-            encryptedfile = yeartodecrypt + ".txt.gpg"
-            cmdtorun = f"gpg -o {yeartodecrypt+'.txt'} -d {encryptedfile}"
+            encryptedfile = yeartodecrypt + ".gpg"
+            cmdtorun = f"gpg -o {yeartodecrypt+''} -d {encryptedfile}"
             print(cmdtorun)
             run(cmdtorun,shell=True)
             exit()
         elif inp == '5':
             yeartoencrypt = input("Enter year number to encrypt its file: ")
-            decryptedfile = yeartoencrypt + ".txt"
+            decryptedfile = yeartoencrypt + ""
             cmdtorun = f"gpg -e -r \"{configdict['name']}\" {decryptedfile}"
             print(cmdtorun)
             run(cmdtorun,shell=True)
